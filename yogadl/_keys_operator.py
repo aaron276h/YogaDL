@@ -32,10 +32,19 @@ def non_sequential_shard(keys: List[bytes], shard_index: int, world_size: int) -
 
 
 def shard_keys(
-    keys: List[bytes], shard_index: int, world_size: int, sequential: bool = False
+    keys: List[bytes],
+    shard_index: int,
+    world_size: int,
+    sequential: bool = False,
+    drop_remainder: bool = False,
 ) -> List[bytes]:
     assert shard_index >= 0, "Shard index must be greater or equal to zero."
     assert shard_index < world_size, "Shard index must be less than world_size."
+
+    if drop_remainder:
+        assert len(keys) >= world_size, f"Too few keys to shard across {world_size} ranks."
+        keys = keys[: len(keys) - (len(keys) % world_size)]
+
     if sequential:
         return sequential_shard(keys=keys, shard_index=shard_index, world_size=world_size)
     else:

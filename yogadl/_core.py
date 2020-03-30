@@ -76,6 +76,7 @@ class DataRef(metaclass=abc.ABCMeta):
         shuffle_seed: Optional[int] = None,
         shard_rank: int = 0,
         number_of_shards: int = 1,
+        drop_remainder: bool = False,
     ) -> Stream:
         pass
 
